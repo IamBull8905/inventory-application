@@ -1,11 +1,12 @@
 const { Router } = require("express");
+const { getAllProductsFromDb, renderProductView } = require("../controllers/productController");
 const productRouter = Router();
 
 productRouter.get("/new", getNewProductForm);
 
 productRouter.post("/new", validateProduct, insertNewProductIntoDb);
 
-productRouter.get("/", getAllProductsFromDb);
+productRouter.get("/", getAllProductsFromDb, renderProductView);
 
 productRouter.get("/:productId", getSingleProductFromDb);
 

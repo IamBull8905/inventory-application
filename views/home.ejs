@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>Sakura Mart Homepage</title>
+        <link rel="stylesheet" href="./styles.css">
+    </head>
+    <body>
+        <%- include('navbar', {links: links}) %>
+        <h1>Welcome いらっしゃいませ!</h1>
+        <p>Welcome to Sakura Mart サクラ コンビニ へ ようこそ!</p>
+        <p>Here you can view/create products & categories at the convenience store.</p>
+        <div class="links-container">
+            <a href="/category">
+                <span>View Categories</span>
+            </a>
+            <a href="/product">
+                <span>View Products</span>
+            </a>
+        </div>
+        <%- include('footer') %>
+    </body>
+</html>

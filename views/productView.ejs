@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title>Sakura Mart Products</title>
+        <link rel="stylesheet" href="./styles.css">
+    </head>
+    <body>
+        <%- include('navbar', {links: links}) %>
+        <div class="product-container">
+            <div class="product-header">
+                <p>Products</p>
+                <a href="/product/new">Add a product</a>
+            </div>
+            <div class="product-main-content">
+                <div class="product-list">
+                    <% for (let i = 0; i < products.length; i++) { %>
+                        <li>
+                            <a href="<%= products[i].href">
+                                <span> <%= products[i].text %> </span>
+                            </a>
+                        </li>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <%- include('footer') %>
+    </body>
+</html>
