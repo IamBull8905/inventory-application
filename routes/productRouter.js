@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getAllProductsFromDb, renderProductView } = require("../controllers/productController");
+const { getAllProductsFromDb, renderProductView, getSingleProductFromDb, renderSingleProductView } = require("../controllers/productController");
 const productRouter = Router();
 
 productRouter.get("/new", getNewProductForm);
@@ -8,7 +8,7 @@ productRouter.post("/new", validateProduct, insertNewProductIntoDb);
 
 productRouter.get("/", getAllProductsFromDb, renderProductView);
 
-productRouter.get("/:productId", getSingleProductFromDb);
+productRouter.get("/:productId", getSingleProductFromDb, renderSingleProductView);
 
 productRouter.get("/edit/:productId", getEditProductForm);
 

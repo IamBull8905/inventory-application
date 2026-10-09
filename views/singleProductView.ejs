@@ -1,0 +1,22 @@
+<div class="view-product-container">
+  <div class="product-contents">
+    <div class="product-header">
+      <h3><%=productName %></h3>
+      <p>¥<%=productPrice %></p>
+    </div>
+    <div class="product-main">
+      <p class="product-brand"><%=productBrand %></p>
+      <p class="product-category"><%=productCategory %></p>
+      <p class="product-stock"><%=productStock %></p>
+    </div>
+    <p class="product-description"><%=productDescription %></p>
+  </div>
+  <div class="product-buttons">
+    <form action="/product/edit/<%=productId %>" method="GET">
+      <button class="edit-product-button" type="submit">Edit</button>
+    </form>
+    <form action="/product/delete/<%=productId %>" method="POST">
+      <button class="delete-product-button" type="submit">Delete</button>
+    </form>
+  </div>
+</div>

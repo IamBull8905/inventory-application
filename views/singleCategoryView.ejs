@@ -1,0 +1,14 @@
+<div class="view-category-container">
+  <div class="category-contents">
+    <h1 class="category-name"><%=categoryName %></h1>
+    <p class="category-description"><%=categoryDescription %></p>
+  </div>
+  <div class="category-buttons">
+    <form action="/category/edit/<%=categoryId %>" method="GET">
+      <button class="edit-category-button" type="submit">Edit</button>
+    </form>
+    <form action="/category/delete/<%=categoryId %>" method="POST">
+      <button class="delete-category-button" type="submit">Delete</button>
+    </form>
+  </div>
+</div>
