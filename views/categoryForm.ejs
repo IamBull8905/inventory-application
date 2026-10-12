@@ -1,0 +1,11 @@
+<div class="category-form-container">
+  <h2 class="form-header"><%= locals.formTitle %></h2> <!-- used locals.formTitle because this will serve as the create AND edit form-->
+  <%- include("partials/errors.ejs") %>
+  <form method="POST" action="<%= locals.formAction %>">
+    <label for="categoryName">Category Name:</label>
+    <input type="text" id="categoryName" name="categoryName" value="<%= locals.categoryName || '' %>" required />
+    <label for="categoryDescription">Description of category:</label>
+    <textarea id="categoryDescription" name="categoryDescription" rows="75" cols="90" required><%= locals.categoryDescription || '' %></textarea>
+    <button type="submit"><%= locals.formTitle %></button>
+  </form>
+</div>

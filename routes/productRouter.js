@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getAllProductsFromDb, renderProductView, getSingleProductFromDb, renderSingleProductView } = require("../controllers/productController");
+const { getAllProductsFromDb, renderProductView, getSingleProductFromDb, renderSingleProductView, getNewProductForm, getEditProductForm } = require("../controllers/productController");
 const productRouter = Router();
 
 productRouter.get("/new", getNewProductForm);

@@ -20,7 +20,27 @@ function renderSingleCategoryView(req, res) {
   });
 }
 
+function getNewCategoryForm(req, res) {
+  res.render("categoryForm", {
+    formTitle: "Create New Category",
+    formAction: "/new",
+  });
+}
+
+function getEditCategoryForm(req, res) {
+  res.render("categoryForm", {
+    formTitle: "Edit Category",
+    formAction: `/edit/${categoryId}`,
+    categoryName: categoryName,
+    categoryDescription: categoryDescription,
+  })
+}
+
 module.exports = {
   getAllCategoriesFromDb,
   renderCategoryView,
+  getSingleCategoryFromDb,
+  renderSingleCategoryView,
+  getNewCategoryForm,
+  getEditCategoryForm,
 };

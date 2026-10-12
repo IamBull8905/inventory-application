@@ -1,0 +1,42 @@
+<div class="product-form-container">
+    <h2 class="form-header"><%= locals.formTitle %></h2> <!-- used locals.formTitle because this will serve as the create AND edit form-->
+    <%- include("partials/errors.ejs") %>
+    <form method="POST" action="<%= locals.formAction %>">
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" value="<%= locals.productName || '' %>" required />
+        <label for="productDescription">Description of product:</label>
+        <textarea id="productDescription" name="productDescription" rows="75" cols="90" required><%= locals.productDescription || '' %></textarea>
+        <label for="productPrice">Price of product:</label>
+        <input type="number" min="1" id="productPrice" name="productPrice" value="<%= locals.productPrice ||'' %>" required />
+        <label for="productStock">Product stock:</label>
+        <input type="number" min="0" id="productStock" name="productStock" value="<%= locals.productStock ||'' %>" required />
+
+        <select name="brand" required>
+            <optgroup label="飲み物/Drinks">
+                <option value="Sakura Fresh">Sakura Fresh</option>
+                <option value="Ayataka">Ayataka</option>
+            </optgroup>
+            <optgroup label="軽食/Light Meals">
+                <option value="Sakura Bento">Sakura Bento</option>
+                <option value="Nissin">Nissin</option>
+                <option value="7-Eleven Japan">7-Eleven Japan</option>
+                <option value="Famichiki">Famichiki</option>
+            </optgroup>
+            <optgroup label="おやつ/Refreshments">
+                <option value="Lawson Uchi Café">Lawson Uchi Café</option>
+                <option value="Sakura Mochi">Sakura Mochi</option>
+                <option value="Calbee">Calbee</option>
+            </optgroup>
+        </select>
+
+        <select name="category" required>
+            <% categories.forEach((category) => { %>
+                <option value="<%= category.name %>">
+                    <%= category.name %>
+                </option>
+            <% }); %>
+        </select>
+
+        <button type="submit"><%= locals.formTitle %></button>
+    </form>
+</div>

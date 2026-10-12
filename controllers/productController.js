@@ -24,9 +24,31 @@ function renderSingleProductView(req, res) {
   });
 }
 
+function getNewProductForm(req, res) {
+  res.render("productForm", {
+    formTitle: "Create Product",
+    formAction: "/new",
+    categories: categories,
+  });
+}
+
+function getEditProductForm(req, res) {
+  res.render("productForm", {
+    formTitle: "Edit Product",
+    formAction: `/edit/${productId}`,
+    productName: productName,
+    productDescription: productDescription,
+    productPrice: productPrice,
+    productStock: productStock,
+    categories: categories,
+  });
+}
+
 module.exports = {
   getAllProductsFromDb,
   renderProductView,
   getSingleProductFromDb,
   renderSingleProductView,
+  getNewProductForm,
+  getEditProductForm,
 };
