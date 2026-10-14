@@ -4,7 +4,7 @@ const productRouter = Router();
 
 productRouter.get("/new", getNewProductForm);
 
-productRouter.post("/new", validateProduct, insertNewProductIntoDb);
+productRouter.post("/new", insertNewProductIntoDb);
 
 productRouter.get("/", getAllProductsFromDb, renderProductView);
 

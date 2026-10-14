@@ -4,7 +4,7 @@ const categoryRouter = Router();
 
 categoryRouter.get("/new", getNewCategoryForm);
 
-categoryRouter.post("/new", validateCategory, insertNewCategoryIntoDb);
+categoryRouter.post("/new", insertNewCategoryIntoDb);
 
 categoryRouter.get("/", getAllCategoriesFromDb, renderCategoryView);
 
