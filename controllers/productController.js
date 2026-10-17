@@ -1,4 +1,12 @@
 const { body, validationResult, matchedData } = require("express-validator");
+const { getAllCategoriesFromDb } = require("./categoryController");
+const { getAllProducts, getSingleProduct, insertProduct, updateProduct } = require("../db/queries")
+
+const links = [
+  {href: "/", text: "Home"},
+  {href: "/category", text: "Categories"},
+  {href: "/product", text: "Products"},
+];
 
 const validateProduct = [
   body("productName")
@@ -121,6 +129,28 @@ const insertNewProductIntoDb = [
   },
 ];
 
+const updateProductInDb = [
+  ...validateProduct,
+  async (req, res) => {
+    const errors = validationResult(req);
+    const id = req.params.productId;
+    if (!errors.isEmpty()) {
+      return res.status(400).render("productForm", {
+        formTitle: "Update Product",
+        formAction: `/edit/${id}`,
+        productName: req.body.productName,
+        productDescription: req.body.productDescription,
+        productPrice: req.body.productPrice,
+        productStock: req.body.productStock,
+        categories: getAllCategoriesFromDb(),
+      })
+    }
+    const {productName, productDescription, productPrice, productStock, brand, category} = matchedData(req);
+    console.log("Edits the product in the db");
+    res.redirect("/product")
+  }
+]
+
 module.exports = {
   getAllProductsFromDb,
   renderProductView,
@@ -129,4 +159,5 @@ module.exports = {
   getNewProductForm,
   getEditProductForm,
   insertNewProductIntoDb,
+  updateProductInDb,
 };

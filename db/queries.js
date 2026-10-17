@@ -1,0 +1,124 @@
+const pool = require("./pool");
+
+async function getAllCategories() {
+  const { rows } = await pool.query(
+    `SELECT id, category_name, category_description FROM category ORDER BY category_name ASC;`,
+  );
+  return rows;
+}
+
+async function getAllProducts() {
+  const { rows } = await pool.query(
+    `SELECT product_name, product_description, price, stock, brand.brand_name, category.category_name FROM product
+        INNER JOIN brand ON product.brand_id = brand.id
+        INNER JOIN category ON product.category_id = category.id
+        ORDER BY product_name ASC;
+        `,
+  );
+  return rows;
+}
+
+//might need OFFSET for these two queries
+async function getSingleCategory(categoryId) {
+  const { rows } = await pool.query(`SELECT * FROM category WHERE id = $1;`, [
+    categoryId,
+  ]);
+  return rows;
+}
+
+async function getSingleProduct(productId) {
+  const { rows } = await pool.query(`SELECT * FROM product WHERE id = $1;`, [
+    productId,
+  ]);
+  return rows;
+}
+
+async function insertCategory(categoryName, categoryDescription) {
+  await pool.query(
+    `INSERT INTO category (category_name, category_description) VALUES ($1, $2);`,
+    [categoryName, categoryDescription],
+  );
+}
+
+async function insertProduct(
+  productName,
+  productDescription,
+  productPrice,
+  productStock,
+  brandName,
+  category,
+) {
+  const brandId = await pool.query(
+    `SELECT id FROM brand WHERE brand_name = $1;`,
+    [brandName],
+  );
+  const categoryId = await pool.query(
+    `SELECT id FROM category WHERE category_name = $1;`,
+    [categoryName],
+  );
+  await pool.query(
+    `INSERT INTO product (product_name, product_description, price, stock, brand, category) VALUES ($1, $2, $3, $4, $5, $6);`,
+    [
+      productName,
+      productDescription,
+      productPrice,
+      productStock,
+      brandId,
+      categoryId,
+    ],
+  );
+}
+
+async function updateCategory(categoryId, categoryName, categoryDescription) {
+  await pool.query(
+    `UPDATE category
+    SET category_name = $1, category_description = $2
+    WHERE id = $3;`,
+    [categoryName, categoryDescription, categoryId],
+  );
+}
+
+async function updateProduct(
+  productId,
+  productName,
+  productDescription,
+  productPrice,
+  productStock,
+  brand,
+  category,
+) {
+  const brandId = await pool.query(
+    `SELECT id FROM brand WHERE brand_name = $1`,
+    [brand],
+  );
+  const categoryId = await pool.query(
+    `SELECT id FROM category WHERE category_name = $1`,
+    [category],
+  );
+  await pool.query(
+    `UPDATE product
+    SET product_name = $1, product_description = $2, price = $3, stock = $4, brand_id = $5, category_id = $6
+    WHERE id = $7;
+    `,
+    [
+      productName,
+      productDescription,
+      productPrice,
+      productStock,
+      brandId,
+      categoryId,
+      productId,
+    ],
+  );
+}
+
+module.exports = {
+  getAllCategories,
+  getAllProducts,
+  getSingleCategory,
+  getSingleProduct,
+  insertCategory,
+  insertProduct,
+  updateCategory,
+  updateProduct,
+};

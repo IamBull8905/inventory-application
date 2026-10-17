@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getAllCategoriesFromDb, renderCategoryView, getSingleCategoryFromDb, renderSingleCategoryView, getNewCategoryForm, getEditCategoryForm } = require("../controllers/categoryController");
+const { getAllCategoriesFromDb, renderCategoryView, getSingleCategoryFromDb, renderSingleCategoryView, getNewCategoryForm, getEditCategoryForm, insertNewCategoryIntoDb, updateCategoryInDb } = require("../controllers/categoryController");
 const categoryRouter = Router();
 
 categoryRouter.get("/new", getNewCategoryForm);
@@ -12,8 +12,8 @@ categoryRouter.get("/:categoryId", getSingleCategoryFromDb, renderSingleCategory
 
 categoryRouter.get("/edit/:categoryId", getEditCategoryForm);
 
-categoryRouter.post("/edit/:categoryId", validateCategory, editCategory);
+categoryRouter.post("/edit/:categoryId", updateCategoryInDb);
 
-categoryRouter.post("/delete/:categoryId", deleteCategoryFromDb);
+// categoryRouter.post("/delete/:categoryId", deleteCategoryFromDb);
 
 module.exports = categoryRouter;

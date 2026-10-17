@@ -1,4 +1,11 @@
 const { body, validationResult, matchedData } = require("express-validator");
+const { getAllCategories, getSingleCategory, insertCategory, updateCategory } = require("../db/queries");
+
+const links = [
+  {href: "/", text: "Home"},
+  {href: "/category", text: "Categories"},
+  {href: "/product", text: "Products"},
+];
 
 const validateCategory = [
   body("categoryName")
@@ -13,49 +20,52 @@ const validateCategory = [
     .trim()
     .notEmpty()
     .withMessage("Category description cannot be empty.")
-    .isAlphanumeric()
-    .withMessage("Category description can only contain letters and numbers.")
     .isLength({ min: 10, max: 500 })
     .withMessage(
-      "Category description must be between 10 and 500 characters long."
+      "Category description must be between 10 and 500 characters long.",
     ),
 ];
 
 async function getAllCategoriesFromDb(req, res, next) {
-  console.log("Gets all the categories from the db");
+  const categories = await getAllCategories();
+  req.categories = categories;
   next();
 }
 
 function renderCategoryView(req, res) {
-  res.render("allCategoryView", { categories: categories, links: links });
+  res.render("allCategoryView", { categories: req.categories, links: links });
 }
 
 async function getSingleCategoryFromDb(req, res, next) {
-  console.log("Gets a single category from the db");
+  const categoryId = req.params.categoryId;
+  const dbResponse = await getSingleCategory(categoryId);
+  req.categoryName = dbResponse[0].category_name;
+  req.categoryDescription = dbResponse[0].category_description;
   next();
 }
 
 function renderSingleCategoryView(req, res) {
   res.render("singleCategoryView", {
-    categoryName: categoryName,
-    categoryDescription: categoryDescription,
-    categoryId: categoryId,
+    categoryName: req.categoryName,
+    categoryDescription: req.categoryDescription,
+    categoryId: req.params.categoryId,
   });
 }
 
 function getNewCategoryForm(req, res) {
   res.render("categoryForm", {
     formTitle: "Create New Category",
-    formAction: "/new",
+    formAction: "/category/new",
   });
 }
 
-function getEditCategoryForm(req, res) {
+async function getEditCategoryForm(req, res) {
+  const categoryInfo = await getSingleCategory(req.params.categoryId);
   res.render("categoryForm", {
     formTitle: "Edit Category",
-    formAction: `/edit/${categoryId}`,
-    categoryName: categoryName,
-    categoryDescription: categoryDescription,
+    formAction: `/category/edit/${req.params.categoryId}`,
+    categoryName: categoryInfo[0].category_name,
+    categoryDescription: categoryInfo[0].category_description,
   });
 }
 
@@ -71,7 +81,27 @@ const insertNewCategoryIntoDb = [
       });
     }
     const { categoryName, categoryDescription } = matchedData(req);
-    console.log("Add category into db");
+    await insertCategory(categoryName, categoryDescription);
+    res.redirect("/category");
+  },
+];
+
+const updateCategoryInDb = [
+  ...validateCategory,
+  async (req, res) => {
+    const errors = validationResult(req);
+    const id = req.params.categoryId;
+    if (!errors.isEmpty()) {
+      return res.status(400).render("categoryForm", {
+        formTitle: "Update Category",
+        errors: errors.array(),
+        formAction: `/category/edit/${id}`,
+        categoryName: req.body.categoryName,
+        categoryDescription: req.body.categoryDescription,
+      });
+    }
+    const { categoryName, categoryDescription } = matchedData(req);
+    await updateCategory(id, categoryName, categoryDescription);
     res.redirect("/category");
   },
 ];
@@ -84,4 +114,5 @@ module.exports = {
   getNewCategoryForm,
   getEditCategoryForm,
   insertNewCategoryIntoDb,
+  updateCategoryInDb,
 };

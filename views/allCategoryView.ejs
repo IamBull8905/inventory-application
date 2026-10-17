@@ -14,8 +14,8 @@
                 <div class="category-list">
                     <% for (let i = 0; i < categories.length; i++) { %>
                         <li>
-                            <a href="<%= categories[i].href">
-                                <span> <%= categories[i].text %> </span>
+                            <a href="/category/<%=categories[i].id%>">
+                                <span><%= categories[i].category_name %></span>
                             </a>
                         </li>
                     <% } %>
