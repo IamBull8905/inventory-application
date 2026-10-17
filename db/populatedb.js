@@ -18,4 +18,8 @@ CREATE TABLE IF NOT EXISTS product(
     stock INTEGER CONSTRAINT stock_must_be_non_negative CHECK (stock >= 0),
     brand_id INTEGER references brand(id),
     category_id INTEGER references category(id)
-);`;
+);
+
+INSERT INTO brand (brand_name, origin) VALUES ('Sakura Fresh', 'Osaka'), ('Ayataka', 'Kyoto'), ('Sakura Bento', 'Osaka'), ('Nissin', 'Osaka'), ('7-Eleven Japan', 'Tokyo'), ('Famichiki', 'Okinawa'), ('Lawson Uchi Café','Tokyo'), ('Sakura Mochi', 'Osaka'), ('Calbee', 'Hiroshima')
+
+`;

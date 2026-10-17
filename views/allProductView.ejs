@@ -14,8 +14,8 @@
                 <div class="product-list">
                     <% for (let i = 0; i < products.length; i++) { %>
                         <li>
-                            <a href="<%= products[i].href">
-                                <span> <%= products[i].text %> </span>
+                            <a href="/product/<%=products[i].id%>">
+                                <span> <%= products[i].product_name %> </span>
                             </a>
                         </li>
                     <% } %>

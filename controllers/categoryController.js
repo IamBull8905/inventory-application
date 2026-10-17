@@ -77,7 +77,7 @@ const insertNewCategoryIntoDb = [
       return res.status(400).render("categoryForm", {
         formTitle: "Create New Category",
         errors: errors.array(),
-        formAction: "/new",
+        formAction: "/category/new",
       });
     }
     const { categoryName, categoryDescription } = matchedData(req);

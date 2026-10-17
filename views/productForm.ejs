@@ -28,11 +28,11 @@
                 <option value="Calbee">Calbee</option>
             </optgroup>
         </select>
-
+        <% console.log(categories) %>
         <select name="category" required>
             <% categories.forEach((category) => { %>
-                <option value="<%= category.name %>">
-                    <%= category.name %>
+                <option value="<%= category.category_name %>">
+                    <%= category.category_name %>
                 </option>
             <% }); %>
         </select>

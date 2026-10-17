@@ -1,6 +1,5 @@
 const { body, validationResult, matchedData } = require("express-validator");
-const { getAllCategoriesFromDb } = require("./categoryController");
-const { getAllProducts, getSingleProduct, insertProduct, updateProduct } = require("../db/queries")
+const { getAllCategories, getAllProducts, getSingleCategory, getSingleProduct, getSingleBrand, insertProduct, updateProduct } = require("../db/queries")
 
 const links = [
   {href: "/", text: "Home"},
@@ -61,46 +60,54 @@ const validateProduct = [
 ];
 
 async function getAllProductsFromDb(req, res, next) {
-  console.log("Gets all the products from the db");
+  const fetchedProducts = await getAllProducts();
+  req.products = fetchedProducts;
   next();
 }
 
 function renderProductView(req, res) {
-  res.render("allProductView", { products: products, links: links });
+  res.render("allProductView", { products: req.products, links: links });
 }
 
 async function getSingleProductFromDb(req, res, next) {
-  console.log("Gets a single product from the db");
+  const fetchedSingleProduct = await getSingleProduct(req.params.productId);
+  req.productDetails = fetchedSingleProduct;
   next();
 }
 
-function renderSingleProductView(req, res) {
+async function renderSingleProductView(req, res) {
+  const productDetails = req.productDetails[0];
+  const categoryDetails = await getSingleCategory(productDetails.category_id);
+  const brandDetails = await getSingleBrand(productDetails.brand_id);
   res.render("singleProductView", {
-    productName: productName,
-    productPrice: productPrice,
-    productBrand: productBrand,
-    productCategory: productCategory,
-    productStock: productStock,
-    productDescription: productDescription,
-    productId: productId,
+    productName: productDetails.product_name,
+    productPrice: productDetails.price,
+    productBrand: brandDetails[0].brand_name,
+    productCategory: categoryDetails[0].category_name,
+    productStock: productDetails.stock,
+    productDescription: productDetails.product_description,
+    productId: req.params.productId,
   });
 }
 
-function getNewProductForm(req, res) {
+async function getNewProductForm(req, res) {
   res.render("productForm", {
     formTitle: "Create Product",
-    formAction: "/new",
+    formAction: "/product/new",
+    categories: await getAllCategories(),
   });
 }
 
-function getEditProductForm(req, res) {
+async function getEditProductForm(req, res) {
+  const productInfo = await getSingleProduct(req.params.productId);
+  const categories = await getAllCategories();
   res.render("productForm", {
     formTitle: "Edit Product",
-    formAction: `/edit/${productId}`,
-    productName: productName,
-    productDescription: productDescription,
-    productPrice: productPrice,
-    productStock: productStock,
+    formAction: `/product/edit/${req.params.productId}`,
+    productName: productInfo[0].product_name,
+    productDescription: productInfo[0].product_description,
+    productPrice: productInfo[0].price,
+    productStock: productInfo[0].stock,
     categories: categories,
   });
 }
@@ -124,7 +131,7 @@ const insertNewProductIntoDb = [
       brand,
       category,
     } = matchedData(req);
-    console.log("Add product into db");
+    await insertProduct(productName, productDescription, productPrice, productStock, brand, category);
     res.redirect("/product");
   },
 ];
@@ -146,8 +153,8 @@ const updateProductInDb = [
       })
     }
     const {productName, productDescription, productPrice, productStock, brand, category} = matchedData(req);
-    console.log("Edits the product in the db");
-    res.redirect("/product")
+    await updateProduct(id, productName, productDescription, productPrice, productStock, brand, category);
+    res.redirect("/product");
   }
 ]
 

@@ -9,7 +9,7 @@ async function getAllCategories() {
 
 async function getAllProducts() {
   const { rows } = await pool.query(
-    `SELECT product_name, product_description, price, stock, brand.brand_name, category.category_name FROM product
+    `SELECT * FROM product
         INNER JOIN brand ON product.brand_id = brand.id
         INNER JOIN category ON product.category_id = category.id
         ORDER BY product_name ASC;
@@ -33,6 +33,11 @@ async function getSingleProduct(productId) {
   return rows;
 }
 
+async function getSingleBrand(brandId) {
+  const { rows } = await pool.query(`SELECT * FROM brand WHERE id = $1;`, [brandId]);
+  return rows;
+}
+
 async function insertCategory(categoryName, categoryDescription) {
   await pool.query(
     `INSERT INTO category (category_name, category_description) VALUES ($1, $2);`,
@@ -46,7 +51,7 @@ async function insertProduct(
   productPrice,
   productStock,
   brandName,
-  category,
+  categoryName,
 ) {
   const brandId = await pool.query(
     `SELECT id FROM brand WHERE brand_name = $1;`,
@@ -57,14 +62,14 @@ async function insertProduct(
     [categoryName],
   );
   await pool.query(
-    `INSERT INTO product (product_name, product_description, price, stock, brand, category) VALUES ($1, $2, $3, $4, $5, $6);`,
+    `INSERT INTO product (product_name, product_description, price, stock, brand_id, category_id) VALUES ($1, $2, $3, $4, $5, $6);`,
     [
       productName,
       productDescription,
       productPrice,
       productStock,
-      brandId,
-      categoryId,
+      brandId.rows[0].id,
+      categoryId.rows[0].id,
     ],
   );
 }
@@ -105,8 +110,8 @@ async function updateProduct(
       productDescription,
       productPrice,
       productStock,
-      brandId,
-      categoryId,
+      brandId.rows[0].id,
+      categoryId.rows[0].id,
       productId,
     ],
   );
@@ -117,6 +122,7 @@ module.exports = {
   getAllProducts,
   getSingleCategory,
   getSingleProduct,
+  getSingleBrand,
   insertCategory,
   insertProduct,
   updateCategory,
