@@ -6,6 +6,17 @@
     <input type="text" id="categoryName" name="categoryName" value="<%= locals.categoryName || '' %>" required />
     <label for="categoryDescription">Description of category:</label>
     <textarea id="categoryDescription" name="categoryDescription" rows="75" cols="90" required><%= locals.categoryDescription || '' %></textarea>
-    <button type="submit"><%= locals.formTitle %></button>
+    <input type="password" id="password" name="password" hidden>
+    <button id="submit-btn" type="submit"><%= locals.formTitle %></button>
   </form>
+  <script>
+    const button = document.getElementById("submit-btn");
+    const passwordInput = document.getElementById("password");
+    button.addEventListener("click", (e) => {
+      if (button.textContent === "Edit Category") {
+        let userPassword = prompt("You must enter a secret password in order to edit categories/products! ");
+        passwordInput.value = userPassword;
+      }
+    })
+  </script>
 </div>

@@ -1,10 +1,17 @@
 const { body, validationResult, matchedData } = require("express-validator");
-const { getAllCategories, getSingleCategory, insertCategory, updateCategory, updateAffectedProducts, deleteCategory } = require("../db/queries");
+const {
+  getAllCategories,
+  getSingleCategory,
+  insertCategory,
+  updateCategory,
+  updateAffectedProducts,
+  deleteCategory,
+} = require("../db/queries");
 
 const links = [
-  {href: "/", text: "Home"},
-  {href: "/category", text: "Categories"},
-  {href: "/product", text: "Products"},
+  { href: "/", text: "Home" },
+  { href: "/category", text: "Categories" },
+  { href: "/product", text: "Products" },
 ];
 
 const validateCategory = [
@@ -101,15 +108,40 @@ const updateCategoryInDb = [
       });
     }
     const { categoryName, categoryDescription } = matchedData(req);
+    if (req.body.password !== process.env.SECRET_PASSWORD) {
+      return res.status(403).render("categoryForm", {
+        formTitle: "Update Category",
+        errors: [
+          {
+            type: "field",
+            value: req.body.password,
+            msg: "Incorrect password entered",
+            path: "CategoryPassword",
+            location: "body",
+          },
+        ],
+        formAction: `/category/edit/${id}`,
+        categoryName: req.body.categoryName,
+        categoryDescription: req.body.categoryDescription,
+      });
+    }
     await updateCategory(id, categoryName, categoryDescription);
     res.redirect("/category");
   },
 ];
 
 async function deleteCategoryFromDb(req, res) {
+  if (req.body.password !== process.env.SECRET_PASSWORD) {
+    return res.send(`
+      <script>
+        alert("Incorrect password given. Redirecting to category list...");
+        window.location.href = "/category";
+      </script>
+      `);
+  };
   await updateAffectedProducts(req.params.categoryId);
   await deleteCategory(req.params.categoryId);
-  res.redirect("/category");
+  return res.redirect("/category");
 }
 
 module.exports = {

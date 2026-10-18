@@ -148,23 +148,44 @@ const updateProductInDb = [
     if (!errors.isEmpty()) {
       return res.status(400).render("productForm", {
         formTitle: "Update Product",
+        errors: errors.array(),
         formAction: `/edit/${id}`,
         productName: req.body.productName,
         productDescription: req.body.productDescription,
         productPrice: req.body.productPrice,
         productStock: req.body.productStock,
-        categories: getAllCategoriesFromDb(),
+        categories: await getAllCategories(),
       })
     }
     const {productName, productDescription, productPrice, productStock, brand, category} = matchedData(req);
+    if (req.body.password !== process.env.SECRET_PASSWORD) {
+      return res.status(403).render("productForm", {
+        formTitle: "Update Product",
+        errors: [{type: "field", value: req.body.password, msg: "Incorrect password entered", path: "ProductPassword", location: "body"}],
+        formAction: `/product/edit/${id}`,
+        productName: req.body.productName,
+        productDescription: req.body.productDescription,
+        productPrice: req.body.productPrice,
+        productStock: req.body.productStock,
+        categories: await getAllCategories(),
+      })
+    }
     await updateProduct(id, productName, productDescription, productPrice, productStock, brand, category);
     res.redirect("/product");
   }
 ]
 
 async function deleteProductFromDb(req, res) {
+  if (req.body.password !== process.env.SECRET_PASSWORD) {
+    return res.send(`
+      <script>
+        alert("Incorrect password given. Redirecting to product list...");
+        window.location.href = "/product";
+      </script>
+      `);
+    };
   await deleteProduct(req.params.productId);
-  res.redirect("/product");
+  return res.redirect("/product");
 }
 
 module.exports = {

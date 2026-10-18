@@ -35,7 +35,18 @@
                 </option>
             <% }); %>
         </select>
-
-        <button type="submit"><%= locals.formTitle %></button>
+        <input type="password" id="password" name="password" hidden>
+        <button type="submit" id="submit-btn"><%= locals.formTitle %></button>
     </form>
+    <script>
+    const button = document.getElementById("submit-btn");
+    const passwordInput = document.getElementById("password");
+    console.log(button.textContent);
+    button.addEventListener("click", (e) => {
+      if (button.textContent === "Update Product") {
+        let userPassword = prompt("You must enter a secret password in order to edit categories/products! ");
+        passwordInput.value = userPassword;
+      }
+    })
+    </script>
 </div>

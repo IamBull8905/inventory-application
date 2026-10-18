@@ -8,7 +8,18 @@
       <button class="edit-category-button" type="submit">Edit</button>
     </form>
     <form action="/category/delete/<%=categoryId %>" method="POST">
-      <button class="delete-category-button" type="submit">Delete</button>
+      <input type="password" name="password" id="password" hidden />
+      <button class="delete-category-button" id="submit-btn" type="submit">Delete</button>
     </form>
   </div>
+  <script>
+    const button = document.getElementById("submit-btn");
+    const passwordInput = document.getElementById("password");
+    button.addEventListener("click", (e) => {
+      let userPassword = prompt(
+        "You must enter a secret password in order to delete categories/products! ",
+      );
+      passwordInput.value = userPassword;
+    });
+  </script>
 </div>
