@@ -1,5 +1,5 @@
 const { body, validationResult, matchedData } = require("express-validator");
-const { getAllCategories, getAllProducts, getSingleCategory, getSingleProduct, getSingleBrand, insertProduct, updateProduct } = require("../db/queries")
+const { getAllCategories, getAllProducts, getSingleCategory, getSingleProduct, getSingleBrand, insertProduct, updateProduct, deleteProduct } = require("../db/queries")
 
 const links = [
   {href: "/", text: "Home"},
@@ -78,12 +78,16 @@ async function getSingleProductFromDb(req, res, next) {
 async function renderSingleProductView(req, res) {
   const productDetails = req.productDetails[0];
   const categoryDetails = await getSingleCategory(productDetails.category_id);
+  let categoryToUse = 'No category assigned';
+  if (categoryDetails.length !== 0) {
+    categoryToUse = categoryDetails[0].category_name;
+  };
   const brandDetails = await getSingleBrand(productDetails.brand_id);
   res.render("singleProductView", {
     productName: productDetails.product_name,
     productPrice: productDetails.price,
     productBrand: brandDetails[0].brand_name,
-    productCategory: categoryDetails[0].category_name,
+    productCategory: categoryToUse,
     productStock: productDetails.stock,
     productDescription: productDetails.product_description,
     productId: req.params.productId,
@@ -158,6 +162,11 @@ const updateProductInDb = [
   }
 ]
 
+async function deleteProductFromDb(req, res) {
+  await deleteProduct(req.params.productId);
+  res.redirect("/product");
+}
+
 module.exports = {
   getAllProductsFromDb,
   renderProductView,
@@ -167,4 +176,5 @@ module.exports = {
   getEditProductForm,
   insertNewProductIntoDb,
   updateProductInDb,
+  deleteProductFromDb,
 };

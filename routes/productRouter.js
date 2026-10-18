@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getAllProductsFromDb, renderProductView, getSingleProductFromDb, renderSingleProductView, getNewProductForm, getEditProductForm, insertNewProductIntoDb, updateProductInDb } = require("../controllers/productController");
+const { getAllProductsFromDb, renderProductView, getSingleProductFromDb, renderSingleProductView, getNewProductForm, getEditProductForm, insertNewProductIntoDb, updateProductInDb, deleteProductFromDb } = require("../controllers/productController");
 const productRouter = Router();
 
 productRouter.get("/new", getNewProductForm);
@@ -14,6 +14,6 @@ productRouter.get("/edit/:productId", getEditProductForm);
 
 productRouter.post("/edit/:productId", updateProductInDb);
 
-// productRouter.post("/delete/:productId", deleteProductFromDb);
+productRouter.post("/delete/:productId", deleteProductFromDb);
 
 module.exports = productRouter;

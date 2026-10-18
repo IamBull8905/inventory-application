@@ -10,9 +10,7 @@ async function getAllCategories() {
 async function getAllProducts() {
   const { rows } = await pool.query(
     `SELECT * FROM product
-        INNER JOIN brand ON product.brand_id = brand.id
-        INNER JOIN category ON product.category_id = category.id
-        ORDER BY product_name ASC;
+      ORDER BY product_name ASC;
         `,
   );
   return rows;
@@ -34,7 +32,9 @@ async function getSingleProduct(productId) {
 }
 
 async function getSingleBrand(brandId) {
-  const { rows } = await pool.query(`SELECT * FROM brand WHERE id = $1;`, [brandId]);
+  const { rows } = await pool.query(`SELECT * FROM brand WHERE id = $1;`, [
+    brandId,
+  ]);
   return rows;
 }
 
@@ -117,6 +117,25 @@ async function updateProduct(
   );
 }
 
+async function deleteProduct(productId) {
+  await pool.query(`DELETE FROM product WHERE id = $1;`, [productId]);
+}
+
+async function updateAffectedProducts(categoryId) {
+  await pool.query(
+    `
+    UPDATE product
+    SET category_id = null
+    WHERE category_id = $1;
+    `,
+    [categoryId],
+  );
+}
+
+async function deleteCategory(categoryId) {
+  await pool.query(`DELETE FROM category WHERE id = $1;`, [categoryId]);
+}
+
 module.exports = {
   getAllCategories,
   getAllProducts,
@@ -127,4 +146,7 @@ module.exports = {
   insertProduct,
   updateCategory,
   updateProduct,
+  deleteProduct,
+  updateAffectedProducts,
+  deleteCategory,
 };

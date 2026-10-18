@@ -1,5 +1,5 @@
 const { body, validationResult, matchedData } = require("express-validator");
-const { getAllCategories, getSingleCategory, insertCategory, updateCategory } = require("../db/queries");
+const { getAllCategories, getSingleCategory, insertCategory, updateCategory, updateAffectedProducts, deleteCategory } = require("../db/queries");
 
 const links = [
   {href: "/", text: "Home"},
@@ -106,6 +106,12 @@ const updateCategoryInDb = [
   },
 ];
 
+async function deleteCategoryFromDb(req, res) {
+  await updateAffectedProducts(req.params.categoryId);
+  await deleteCategory(req.params.categoryId);
+  res.redirect("/category");
+}
+
 module.exports = {
   getAllCategoriesFromDb,
   renderCategoryView,
@@ -115,4 +121,5 @@ module.exports = {
   getEditCategoryForm,
   insertNewCategoryIntoDb,
   updateCategoryInDb,
+  deleteCategoryFromDb,
 };
