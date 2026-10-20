@@ -1,3 +1,7 @@
+#! /usr/bin/env node
+
+const { Client } = require("pg");
+
 const SQL = `CREATE TABLE IF NOT EXISTS brand(
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     brand_name VARCHAR( 75 ),
@@ -23,3 +27,16 @@ CREATE TABLE IF NOT EXISTS product(
 INSERT INTO brand (brand_name, origin) VALUES ('Sakura Fresh', 'Osaka'), ('Ayataka', 'Kyoto'), ('Sakura Bento', 'Osaka'), ('Nissin', 'Osaka'), ('7-Eleven Japan', 'Tokyo'), ('Famichiki', 'Okinawa'), ('Lawson Uchi Café','Tokyo'), ('Sakura Mochi', 'Osaka'), ('Calbee', 'Hiroshima')
 
 `;
+
+async function main() {
+  console.log("seeding...");
+  const client = new Client({
+    connectionString: process.env.INTERNAL_DATABASE_URL,
+  });
+  await client.connect();
+  await client.query(SQL);
+  await client.end();
+  console.log("done");
+}
+
+main();
