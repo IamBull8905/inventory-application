@@ -1,1 +1,2 @@
 # inventory-application
+This is the third project in the NodeJS portion of The Odin Project. it ties together a lot of the key concepts I have learnt so far including: model-view-controller pattern, express & express-validator, routing and using a postgres database.
