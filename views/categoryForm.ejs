@@ -1,22 +1,27 @@
-<div class="category-form-container">
-  <h2 class="form-header"><%= locals.formTitle %></h2> <!-- used locals.formTitle because this will serve as the create AND edit form-->
-  <%- include("partials/errors.ejs") %>
-  <form method="POST" action="<%= locals.formAction %>">
-    <label for="categoryName">Category Name:</label>
-    <input type="text" id="categoryName" name="categoryName" value="<%= locals.categoryName || '' %>" required />
-    <label for="categoryDescription">Description of category:</label>
-    <textarea id="categoryDescription" name="categoryDescription" rows="75" cols="90" required><%= locals.categoryDescription || '' %></textarea>
-    <input type="password" id="password" name="password" hidden>
-    <button id="submit-btn" type="submit"><%= locals.formTitle %></button>
-  </form>
-  <script>
-    const button = document.getElementById("submit-btn");
-    const passwordInput = document.getElementById("password");
-    button.addEventListener("click", (e) => {
-      if (button.textContent === "Edit Category") {
-        let userPassword = prompt("You must enter a secret password in order to edit categories/products! ");
-        passwordInput.value = userPassword;
-      }
-    })
-  </script>
-</div>
+<head>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="category-form-container">
+    <h2 class="form-header"><%= locals.formTitle %></h2> <!-- used locals.formTitle because this will serve as the create AND edit form-->
+    <%- include("partials/errors.ejs") %>
+    <form method="POST" action="<%= locals.formAction %>">
+      <label for="categoryName">Category Name:</label>
+      <input type="text" id="categoryName" name="categoryName" value="<%= locals.categoryName || '' %>" required />
+      <label for="categoryDescription">Description of category:</label>
+      <textarea id="categoryDescription" name="categoryDescription" rows="25" cols="70" required><%= locals.categoryDescription || '' %></textarea>
+      <input type="password" id="password" name="password" hidden>
+      <button id="submit-btn" type="submit"><%= locals.formTitle %></button>
+    </form>
+    <script>
+      const button = document.getElementById("submit-btn");
+      const passwordInput = document.getElementById("password");
+      button.addEventListener("click", (e) => {
+        if (button.textContent === "Edit Category") {
+          let userPassword = prompt("You must enter a secret password in order to edit categories/products! ");
+          passwordInput.value = userPassword;
+        }
+      })
+    </script>
+  </div>
+</body>
